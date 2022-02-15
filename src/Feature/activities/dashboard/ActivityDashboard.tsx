@@ -4,7 +4,9 @@ import ActivityList from "./ActivityList";
 import { useStore } from "../../../App/stores/store";
 import { useEffect } from "react";
 import React from 'react';
-import { Dimmer, Loader, Segment } from "semantic-ui-react";
+import { Dimmer, Grid, Loader, Segment } from "semantic-ui-react";
+import ActivityFilters from "./ActivityFilters";
+
 
 interface Props{
   submitting: boolean;
@@ -34,24 +36,32 @@ const ActivityDashboard = (props: Props) => {
     )}
   
   return (
-    <div className="d-flex justify-content-center  overflow-y: scroll">
-      <Container fluid="xxl"  >
+    <Grid>
+      <Grid.Column width='10'>
+        <ActivityList></ActivityList>
+      </Grid.Column>
+      <Grid.Column width='6'>
+        <ActivityFilters></ActivityFilters>
+      </Grid.Column>
+    </Grid>
+  //   <div className="d-flex justify-content-center  overflow-y: scroll">
+  //     <Container fluid="xxl"  >
      
-      <ActivityList></ActivityList>
+  //     <ActivityList></ActivityList>
       
-      </Container>
-      <div className="d-flex flex-column m-5 w-100 ">
-      <Stack gap={5} >
+  //     </Container>
+  //     <div className="d-flex flex-column m-5 w-100 ">
+  //     <Stack gap={5} >
       
-          {/* {
-            activityStore.editMode && 
-            <ActivityForm
-                submitting={props.submitting}></ActivityForm>
-          } */}
+  //         {/* {
+  //           activityStore.editMode && 
+  //           <ActivityForm
+  //               submitting={props.submitting}></ActivityForm>
+  //         } */}
           
-      </Stack>
-      </div>
-  </div>
+  //     </Stack>
+  //     </div>
+  // </div>
    
 
   )
