@@ -1,5 +1,4 @@
 import { observer } from "mobx-react-lite";
-import { Container, Stack } from "react-bootstrap"
 import ActivityList from "./ActivityList";
 import { useStore } from "../../../App/stores/store";
 import { useEffect } from "react";

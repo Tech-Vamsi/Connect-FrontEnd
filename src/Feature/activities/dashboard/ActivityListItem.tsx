@@ -7,14 +7,13 @@ import { Activity } from '../../../App/Models/Activity';
 
 interface Props{
   activity: Activity;
-  key: string;
 }
 
-const ActivityListItem = ({ activity,key }: Props) => {
+const ActivityListItem = ({ activity }: Props) => {
   //const { activityStore } = useStore();
  // const { activitiesByDate } = activityStore;
   return (
-    <Card attached='true' key={key}>
+    <Card attached='true' >
     <Image src='/images/avatar/large/matthew.png' wrapped ui={false} />
     <Card.Content>
         <Card.Header style={{fontFamily:'Segoe UI',fontSize:'1rem'}}>{ activity.title}</Card.Header>

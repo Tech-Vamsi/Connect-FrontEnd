@@ -2,16 +2,16 @@
 import { useStore } from '../../../../App/stores/store';
 import { observer } from "mobx-react-lite";
 import React, { useEffect } from 'react';
-import {  useParams} from 'react-router-dom'
+import { useParams} from 'react-router-dom'
 import ActivityDetailedHeader from './ActivityDetailedHeader';
 import ActivityDetailedSideBar from './ActivityDetailedSideBar';
 import ActivityDetailedInfo from './ActivityDetailedInfo';
 import ActivityDetailedChat from './ActivityDetailedChat';
 import { Grid } from 'semantic-ui-react';
+import NotFound from '../../../Errors/NotFound';
 
 
 const ActivityDetails = () => {
-
 
   const { activityStore } = useStore();
   const { selectedActivity: activity ,loadActivity} = activityStore;
@@ -21,7 +21,9 @@ const ActivityDetails = () => {
     if (id) loadActivity(id);
   },[id,loadActivity])
 
-  if (!activity) return(<></>);
+  if (!activity) {
+   return <NotFound/>
+  }
   
   return (
 

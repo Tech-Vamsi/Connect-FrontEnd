@@ -8,7 +8,9 @@ import ActivityForm from '../Models/form/ActivityForm';
 import { Route, Routes, useLocation } from 'react-router-dom'
 import ActivityDetails from '../../Feature/activities/dashboard/details/ActivityDetails';
 import '../../../src/App.css'
+import NotFound from '../../Feature/Errors/NotFound';
 function App() {
+
   const location = useLocation();
  
   return (
@@ -16,13 +18,15 @@ function App() {
        <NavBar/>
       <div className="d-flex justify-content-center">
      
-      <Routes>
+        <Routes>
+         
         <Route path="/" element={<HomePage />} />
         <Route path="/activities" element={<ActivityDashboard submitting={false} />} /> 
         <Route path="/activity/:id" element={<ActivityDetails  />} /> 
-        <Route key={location.key}  path='/createactivity' element={<ActivityForm routeChange={location.key } submitting={false}/>} /> 
-        <Route key={location.key}  path='/edit/:id' element={<ActivityForm routeChange={location.key} submitting={false} />} />
-      
+          <Route key={location.key} path={'/createactivity'} element={<ActivityForm  submitting={false} /> } /> 
+          <Route  key={location.key} path='/edit/:id' element={<ActivityForm  submitting={false} />} />
+        
+          <Route path="*" element={<NotFound/>}/>      
         </Routes>
       </div>
       </div>
