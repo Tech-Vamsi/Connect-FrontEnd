@@ -1,15 +1,37 @@
 import axios, { AxiosError, AxiosResponse } from 'axios'
 import { toast } from 'react-toastify';
-import { Activity } from '../../App/Models/Activity'
+import { Activity, ActivityFormValues } from '../../App/Models/Activity'
 import { store } from '../stores/store';
-import { history } from '../..';
+import { User, UserFormValues } from '../Models/user';
+import { Photo, Profile } from '../Models/Profile';
 const sleep = (delay: number) => {
   return new Promise((resolve) => {
     setTimeout(resolve, delay);
   })
 }
 axios.defaults.baseURL = "https://localhost:5000/api"
+
 export const controller = new AbortController();
+
+axios.interceptors.request.use( async (config) =>{
+
+  const token = store.commonStore.token;
+  if (token) {
+    config.headers = {
+      'Authorization': `Bearer ${token}`
+    }
+    }else {
+    config.headers = {}
+  }
+  
+    return config;
+  
+})
+
+
+
+
+
 axios.interceptors.response.use(async response => {
 
   
@@ -29,9 +51,9 @@ axios.interceptors.response.use(async response => {
         toast.error(data);
         }
       if (config.method === 'get' && data.errors.hasOwnProperty('id')) {
-        history.push('/notfound');
+       
      }
-      history.push('/notfound');
+
       // if (data.errors) {
       //   const modalStateErrors = [];
       //   for (const key in data.errors) {
@@ -53,7 +75,6 @@ axios.interceptors.response.use(async response => {
       break;
     case 500:
       store.commonStore.setServerError(data);
-      history.push('/server-error');
         toast.error("Server Error");
   }
   return Promise.reject(error);
@@ -64,8 +85,8 @@ const responseBody =<T> (response: AxiosResponse<T>) => response.data;
 
 const requests = {
   get: <T>(url: string) => axios.get<T>(url).then(responseBody),
-  post: <T>(url: string, body: {}) => axios.post<T>(url,body,{signal: controller.signal}).then(responseBody),
-  put:<T> (url: string, body: {}) => axios.put<T>(url,body,{signal: controller.signal}).then(responseBody),
+  post: <T>(url: string, body: {}) => axios.post<T>(url,body).then(responseBody),
+  put:<T> (url: string, body: {}) => axios.put<T>(url,body).then(responseBody),
   delete: <T>(url: string) => axios.delete<T>(url).then(responseBody),
  
   
@@ -74,13 +95,35 @@ const requests = {
 const Activites = {
   list: () => requests.get<Activity[]>('/Activities'),
   details: (id: string) => requests.get<Activity>(`/Activities/${id}`),
-  create: (activity: Activity) => requests.post<void>(`/Activities`, activity),
-  update: (activity: Activity) => requests.put<void>(`/Activities/${activity.id}`, activity),
+  create: (activity: ActivityFormValues) => requests.post<void>(`/Activities`, activity),
+  update: (activity: ActivityFormValues) => requests.put<void>(`/Activities/${activity.id}`, activity),
   delete: (id: string) => requests.delete<void>(`/Activities/${id}`),
+  attend:(id: string) => requests.post<void>(`/Activities/${id}/attend`,{}),
+}
+const Account = {
+  current: () => requests.get<User>('/account'),
+  login: (user: UserFormValues) => requests.post<User>('/account/login', user),
+  register:(user:UserFormValues)=>requests.post<User>('/account/register',user)
 }
 
+const Profiles = {
+  get: (username: string) => requests.get<Profile>(`/profile/${username}`),
+  uploadPhoto: (file: Blob) => {
+    let formData = new FormData();
+    formData.append('File', file);
+    return axios.post<Photo>('photos', formData, {
+      headers:{'Content-type':'multipart/form-data'}
+    })
+  },
+  setMainPhoto: (id: string) => requests.post(`/photos/${id}/setMain`, {}),
+  deletePhoto:(id:string)=>requests.delete(`/photos/${id}`)
+}
+
+
 const agent = {
-  Activites
+  Activites,
+  Account,
+  Profiles
 }
 
 export default agent;

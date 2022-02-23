@@ -8,7 +8,7 @@ import { v4 as uuid } from 'uuid';
 import { useNavigate } from 'react-router-dom';
 import { Segment } from 'semantic-ui-react';
 import { Formik,Form} from 'formik';
-import { Activity } from '../Activity';
+import { ActivityFormValues } from '../Activity';
 import CustomInput from '../../Common/Form/CustomInput';
 import * as Yup from 'yup'
 import CustomTextArea from '../../Common/Form/CustomTextArea';
@@ -22,20 +22,12 @@ interface Props {
 }
 
 const ActivityForm = ({ submitting }: Props) => {
-  const { activityStore } = useStore();
+  const { activityStore,userStore } = useStore();
   const { loadActivity, createActivity, updateActivity } = activityStore;
   const { id } = useParams<{ id: string }>();
   const navGate = useNavigate();
 
-  const [activity, setActivity] = useState<Activity>({
-    id: '',
-    title: '',
-    time: null,
-    description: '',
-    category: '',
-    city: '',
-    venue: '',
-  });
+  const [activity, setActivity] = useState<ActivityFormValues>(new ActivityFormValues())
 
   const validator = Yup.object({
     title: Yup.string().required(),
@@ -48,13 +40,15 @@ const ActivityForm = ({ submitting }: Props) => {
   })
 
   useEffect(() => {
-    if (id) loadActivity(id).then(activity => setActivity(activity!))
-  }, [activity, setActivity, id, loadActivity])
+    if (id) loadActivity(id).then(activity => setActivity(new ActivityFormValues(activity)));
+    if(!userStore.isLoggedIn) navGate("/");
+
+  }, [userStore,activity, setActivity, id, loadActivity,navGate])
   
 
-  const handleFormSubmit = (activity: Activity) => {
+  const handleFormSubmit = (activity: ActivityFormValues) => {
     //event.preventDefault();
-    if (activity.id.length === 0) {
+    if (!activity.id) {
       activity.id = uuid();
       createActivity(activity).then(() =>
         

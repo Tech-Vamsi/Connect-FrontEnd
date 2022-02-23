@@ -4,11 +4,12 @@ import './App/Layout/styles.css';
 import App from './App/Layout/App';
 import reportWebVitals from './reportWebVitals';
 import { store,StoreContext } from './App/stores/store';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter} from 'react-router-dom';
 import 'semantic-ui-css/semantic.min.css'
 import 'react-calendar/dist/Calendar.css'
-import { createBrowserHistory } from 'history'
+import {createBrowserHistory}  from 'history'
 import 'react-datepicker/dist/react-datepicker.css'
+
 export const history = createBrowserHistory();
 ReactDOM.render(
   <StoreContext.Provider value={store}>

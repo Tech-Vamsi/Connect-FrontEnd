@@ -5,6 +5,7 @@ import { useEffect } from "react";
 import React from 'react';
 import { Dimmer, Grid, Loader, Segment } from "semantic-ui-react";
 import ActivityFilters from "./ActivityFilters";
+import { useNavigate } from "react-router-dom";
 
 
 interface Props{
@@ -15,19 +16,25 @@ const ActivityDashboard = (props: Props) => {
   const { activityStore } = useStore();
   //const [submitting, setSubmitting] = useState(false);
   const { activityRegistry,loadActivities } = activityStore;
+  const { userStore } = useStore();
+
+  const navigate = useNavigate();
 
   useEffect(() => {
 
     if (activityRegistry.size === 0) loadActivities();
     //activityStore.loadActivities();
+    if (!userStore.isLoggedIn) navigate("/");
 
-  },[activityRegistry.size,loadActivities])
+  },[userStore,activityRegistry.size,loadActivities,navigate])
  
+  
+
   if (activityRegistry.size=== 0)
   {
     return (
 
-      <Segment style={ {border:'none',width:'100%',height:'100vh',display:'flex',alignItems:'center',justifyContent:'center'}}>
+      <Segment style={ {border:'none',width:'100%',height:'100vh',display:'flex',alignItems:'center',justifyContent:'center',overflow:'true'}}>
         <Dimmer active inverted>
           <Loader inverted>Loading</Loader>
         </Dimmer>

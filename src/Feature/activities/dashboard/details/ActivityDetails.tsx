@@ -14,12 +14,15 @@ import NotFound from '../../../Errors/NotFound';
 const ActivityDetails = () => {
 
   const { activityStore } = useStore();
-  const { selectedActivity: activity ,loadActivity} = activityStore;
+  const { selectedActivity: activity ,loadActivity,clearSelectedActivity} = activityStore;
   const { id } = useParams <{id: string}>();
 
   useEffect(() => {
     if (id) loadActivity(id);
-  },[id,loadActivity])
+    return() => {
+      clearSelectedActivity();
+    }
+  },[id,loadActivity,clearSelectedActivity])
 
   if (!activity) {
    return <NotFound/>
@@ -31,10 +34,10 @@ const ActivityDetails = () => {
       <Grid.Column width={6} style={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
         <ActivityDetailedHeader activity={activity}/>
         <ActivityDetailedInfo activity={activity}/>
-        <ActivityDetailedChat/>
+        <ActivityDetailedChat activityId={activity.id}/>
       </Grid.Column>
       <Grid.Column width={6} style={{display:'flex',flexDirection:'column',marginTop:'100px'}}>
-      <ActivityDetailedSideBar/>
+      <ActivityDetailedSideBar activity={activity}/>
       </Grid.Column>
     </Grid>
 

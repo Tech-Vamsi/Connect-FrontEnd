@@ -16,8 +16,8 @@ const ActivityList = () => {
   return (
     <>
       {groupedActivities.map(([group, activities]) => {
-       return <Fragment >
-          <Header key={group}  style={{fontFamily:'Segoe UI',fontSize:'1rem'}}>{group}
+       return <Fragment key={group}>
+          <Header   style={{fontFamily:'Segoe UI',fontSize:'2rem',width:"400px"}}>{group}
         {activities.map(activity => {
        
        return <ActivityListItem key={activity.id} activity={activity}/>
